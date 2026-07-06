@@ -1,5 +1,7 @@
 package com.example;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +11,7 @@ import com.example.base.DummyJSpecify;
 
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
-
+	private static final Logger log = LoggerFactory.getLogger(DemoApplication.class);
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -17,9 +19,10 @@ public class DemoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.err.println("Aplicacion arrancada ...");
+		log.warn("Aplicacion arrancada ...");
 	}
 	
-	@Bean
+//	@Bean
 	CommandLineRunner nulable() {
 		return arg -> {
 			try {
