@@ -12,9 +12,10 @@ public class ConfiguracionImpl implements Configuracion {
 	private final NotificationService notify;
 	private int contador = 0;
 	
-	public ConfiguracionImpl(NotificationService notify) {
+	public ConfiguracionImpl(NotificationService notify, int version) {
 		this.notify = notify;
 		notify.add(getClass().getSimpleName() + " Constructor");
+		contador = version;
 	}
 
 	@Override

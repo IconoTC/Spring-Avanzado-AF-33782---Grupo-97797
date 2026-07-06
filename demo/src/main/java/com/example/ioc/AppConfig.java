@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 import com.example.base.DummyJSpecify;
-import com.example.ioc.anotaciones.Twit;
+import com.example.ioc.anotaciones.Tweet;
 import com.example.ioc.notificaciones.EMailSender;
 import com.example.ioc.notificaciones.Sender;
 import com.example.ioc.notificaciones.TwitterSender;
@@ -15,13 +15,18 @@ import com.example.ioc.notificaciones.TwitterSender;
 @Configuration
 public class AppConfig {
 	@Bean
+	GenericoEvent genericoEvent() {
+		return new GenericoEvent("Creado", "como bean");
+	}
+	@Bean
 	@Lazy
 	ConstructorConValores miClase(NotificationService notify) {
 		return new ConstructorConValores(1, "yo" /*, notify*/);
 	}
 	@Bean
-//	@Qualifier("tweet")
-	@Twit
+	@Qualifier("tweet")
+	@Tweet
+//	@Twit
 	Sender twitea() {
 		return new TwitterSender();
 	}
@@ -33,7 +38,7 @@ public class AppConfig {
 	}
 	@Bean
 	int version() {
-		return 66;
+		return 100;
 	}
 	
 	@Bean

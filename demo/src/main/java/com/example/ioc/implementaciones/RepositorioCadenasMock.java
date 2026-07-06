@@ -14,7 +14,7 @@ import com.example.ioc.contratos.RepositorioCadenas;
 
 import jakarta.annotation.PostConstruct;
 
-//@MockRepository
+@MockRepository
 //@Repository("dao")
 //@Qualifier("test")
 //@Primary

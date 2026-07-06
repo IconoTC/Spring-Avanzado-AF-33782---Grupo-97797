@@ -1,13 +1,28 @@
 package com.example;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.example.base.DummyJSpecify;
+import com.example.ioc.GenericoEvent;
+import com.example.ioc.NotificationService;
+import com.example.ioc.Rango;
+import com.example.ioc.anotaciones.EMail;
+import com.example.ioc.anotaciones.Tweet;
+import com.example.ioc.contratos.ServicioCadenas;
+import com.example.ioc.implementaciones.ConfiguracionImpl;
+import com.example.ioc.implementaciones.RepositorioCadenasImpl;
+import com.example.ioc.implementaciones.ServicioCadenasImpl;
+import com.example.ioc.notificaciones.Sender;
 
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
@@ -36,6 +51,33 @@ public class DemoApplication implements CommandLineRunner {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		};
+	}
+	
+	@Autowired
+	NotificationService notify;
+	
+	@Bean
+	CommandLineRunner ioc(ServicioCadenas srv, GenericoEvent ev, @Value("${mi.nombre:Mundo}") String nombre, Rango rango) {
+		return arg -> {
+			notify.add("Hola %s".formatted(nombre));
+			notify.add(rango.toString());
+//			ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
+			srv.add("añado algo");
+			srv.get().forEach(notify::add);
+			IO.println("==============>");
+			notify.getListado().forEach(IO::println);
+			notify.clear();
+			IO.println("<==============");
+			
+		};
+	}
+	
+//	@Bean
+	CommandLineRunner porNombre(@EMail Sender sender, List<Sender> listado) {
+		return arg -> {
+//			sender.send("Envio notificación");
+			listado.forEach(o -> o.send("notifica"));
 		};
 	}
 

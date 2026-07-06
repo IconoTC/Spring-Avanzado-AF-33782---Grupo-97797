@@ -12,8 +12,8 @@ import com.example.ioc.NotificationService;
 import com.example.ioc.contratos.Configuracion;
 import com.example.ioc.contratos.RepositorioCadenas;
 
-//@Repository
-//@Profile({"prod", "default"})
+@Repository
+@Profile({"prod", "default"})
 //@Primary
 //@Qualifier("prod")
 public class RepositorioCadenasImpl implements RepositorioCadenas {

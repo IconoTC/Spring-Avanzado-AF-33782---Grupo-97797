@@ -2,16 +2,16 @@ package com.example.ioc.implementaciones;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.example.ioc.NotificationService;
-import com.example.ioc.anotaciones.Pruebas;
 //import com.example.ioc.anotaciones.Pruebas;
 import com.example.ioc.contratos.RepositorioCadenas;
 import com.example.ioc.contratos.ServicioCadenas;
 
-//@Service
-//@Profile("test")
+@Service
+@Profile("test")
 //@Pruebas
 public class ServicioCadenasMock implements ServicioCadenas {
 	private final RepositorioCadenas dao;
