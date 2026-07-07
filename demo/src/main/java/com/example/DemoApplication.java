@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.example.base.DummyJSpecify;
@@ -53,7 +54,7 @@ public class DemoApplication implements CommandLineRunner {
 	@Autowired
 	NotificationService notify;
 	
-//	@Bean
+	@Bean
 	CommandLineRunner ioc(ServicioCadenas srv, GenericoEvent ev, @Value("${mi.nombre:Mundo}") String nombre, Rango rango) {
 		return arg -> {
 			notify.add("Hola %s".formatted(nombre));
@@ -77,7 +78,7 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner configuracionEnXML() {
 		return _ -> {
 			try (var contexto = new FileSystemXmlApplicationContext("applicationContext.xml")) {
@@ -100,4 +101,13 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
+	@EventListener
+	private void eventHandler(GenericoEvent ev) {
+		IO.println("Evento generico: %s -> %s".formatted(ev.origen(), ev.carga()));
+	}
+
+	@EventListener
+	private void eventStringHandler(String ev) {
+		IO.println("Tramiento Evento cadena: %s".formatted(ev));
+	}
 }

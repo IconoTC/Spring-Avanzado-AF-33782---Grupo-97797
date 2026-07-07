@@ -26,7 +26,7 @@
 		<constructor-arg name="notify" ref="notify" />
 	</bean>
 
-	<bean name="sender" class="com.example.ioc.notificaciones.EMailSender" />
-	<bean name="sender1" class="com.example.ioc.notificaciones.FileSender" />
+	<bean name="sender1" class="com.example.ioc.notificaciones.EMailSender" />
+	<bean name="sender" class="com.example.ioc.notificaciones.FileSender" />
 	
 </beans>
