@@ -24,10 +24,10 @@ public class DummyService {
     }
     
     public void clearValue() {
+        self.privado();
         value = alwaysNull(); // auto referenciado
 //      value = ((DummyService) AopContext.currentProxy()).alwaysNull();
 //    	value =  self.alwaysNull();
-//        self.privado();
     }
 
     @NonNull 
