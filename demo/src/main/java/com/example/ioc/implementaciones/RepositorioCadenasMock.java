@@ -1,12 +1,10 @@
 package com.example.ioc.implementaciones;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Primary;
 import org.jspecify.annotations.NonNull;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 
+import com.example.aop.anotations.LoggerAll;
 import com.example.ioc.NotificationService;
 import com.example.ioc.anotaciones.MockRepository;
 //import com.example.ioc.anotaciones.RepositoryMock;
@@ -37,7 +35,7 @@ public class RepositorioCadenasMock implements RepositorioCadenas {
 
 
 	@Override
-//	@LoggerAll
+	@LoggerAll
 	public void save(String item) {
 		notify.add("Simulo que guardo los datos '%s' con %s".formatted(item, getClass().getSimpleName()));
 		doEvent("Han ejecutado el guardar.");

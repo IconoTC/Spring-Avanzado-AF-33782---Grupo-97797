@@ -13,21 +13,21 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-//@Aspect
+@Aspect
 public class AspectoImplAspect {
 	@Pointcut("execution(public * com.example.ioc..*.*(..))")
 	public void miPuntoDeCorte() {
 	}
 //	@Before("miPuntoDeCorte()")
-//	@Order(100)
+//	@Order(10)
 //	public void consejoAntesDelMetodo1(JoinPoint jp) {
-//		System.err.println(">>> Soy primer un consejo antesDelMetodo " + jp.getSignature());
+//		System.err.println(">>> Soy primer, un consejo antesDelMetodo " + jp.getSignature());
 //	}
 //
 //	@Before("miPuntoDeCorte()")
 //	@Order(20)
 //	public void consejoAntesDelMetodo2(JoinPoint jp) {
-//		System.err.println(">>> Soy segundo un consejo antesDelMetodo " + jp.getSignature());
+//		System.err.println(">>> Soy segundo, un consejo antesDelMetodo " + jp.getSignature());
 //	}
 //	@Order(10)
 //	@Before("execution(int com.example.ioc..*.get*(..))")

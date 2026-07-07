@@ -65,9 +65,9 @@ public class NotificationServiceImpl implements NotificationService {
 		publisher.publishEvent(new GenericoEvent(getClass().getSimpleName(), event)); 
 	}
 	
-	@EventListener
-	private void eventHandler(String event) {
-		add("Evento cadena: %s".formatted(event));
-	}
+//	@EventListener
+//	private void eventHandler(String event) {
+//		add("Evento cadena: %s".formatted(event));
+//	}
 	
 }

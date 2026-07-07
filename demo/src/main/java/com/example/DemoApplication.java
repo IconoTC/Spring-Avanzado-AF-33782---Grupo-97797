@@ -10,20 +10,27 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.event.EventListener;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.example.aop.AuthenticationService;
+import com.example.aop.introductions.Visible;
 import com.example.base.DummyJSpecify;
 import com.example.ioc.GenericoEvent;
 import com.example.ioc.NotificationService;
 import com.example.ioc.Rango;
 import com.example.ioc.anotaciones.EMail;
 import com.example.ioc.contratos.ServicioCadenas;
+import com.example.ioc.implementaciones.ConfiguracionImpl;
+import com.example.ioc.implementaciones.RepositorioCadenasImpl;
+import com.example.ioc.implementaciones.ServicioCadenasImpl;
 import com.example.ioc.notificaciones.Sender;
 
 @SpringBootApplication
+@EnableAspectJAutoProxy
 public class DemoApplication implements CommandLineRunner {
 	private static final Logger log = LoggerFactory.getLogger(DemoApplication.class);
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -33,7 +40,7 @@ public class DemoApplication implements CommandLineRunner {
 		System.err.println("Aplicacion arrancada ...");
 		log.warn("Aplicacion arrancada ...");
 	}
-	
+
 //	@Bean
 	CommandLineRunner nulable() {
 		return arg -> {
@@ -44,32 +51,40 @@ public class DemoApplication implements CommandLineRunner {
 //				if(dummy.getCadenaSegura().isPresent())
 //					IO.println(dummy.getCadenaSegura().get().toUpperCase());
 //				if(dummy.getCadenaSegura().isPresent())
-					IO.println(dummy.getCadenaSegura().orElse("").toUpperCase());
+				IO.println(dummy.getCadenaSegura().orElse("").toUpperCase());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		};
 	}
-	
+
 	@Autowired
 	NotificationService notify;
-	
-	@Bean
-	CommandLineRunner ioc(ServicioCadenas srv, GenericoEvent ev, @Value("${mi.nombre:Mundo}") String nombre, Rango rango) {
+
+//	@Bean
+	CommandLineRunner ioc(ServicioCadenas srv, AuthenticationService auth, /*GenericoEvent ev,*/
+			@Value("${mi.nombre:Mundo}") String nombre, Rango rango, DummyJSpecify dummy) {
 		return arg -> {
-			notify.add("Hola %s".formatted(nombre));
-			notify.add(rango.toString());
+			try {
+				notify.add("Hola %s".formatted(nombre));
+				notify.add(rango.toString());
 //			ServicioCadenas srv = new ServicioCadenasImpl(new RepositorioCadenasImpl(new ConfiguracionImpl(notify), notify), notify);
-			srv.add("añado algo");
-			srv.get().forEach(notify::add);
-			IO.println("==============>");
-			notify.getListado().forEach(IO::println);
-			notify.clear();
-			IO.println("<==============");
-			
+				auth.login();
+//				System.err.println(srv.getClass().getName());
+				srv.add("añado algo");
+				srv.get().forEach(notify::add);
+				IO.println("==============>");
+				notify.getListado().forEach(IO::println);
+				notify.clear();
+				IO.println("<==============");
+//				dummy.setCadenaSegura(null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		};
 	}
-	
+
 //	@Bean
 	CommandLineRunner porNombre(@EMail Sender sender, List<Sender> listado) {
 		return arg -> {
@@ -101,13 +116,30 @@ public class DemoApplication implements CommandLineRunner {
 		};
 	}
 
-	@EventListener
-	private void eventHandler(GenericoEvent ev) {
-		IO.println("Evento generico: %s -> %s".formatted(ev.origen(), ev.carga()));
+//	@EventListener
+//	private void eventHandler(GenericoEvent ev) {
+//		IO.println("Evento generico: %s -> %s".formatted(ev.origen(), ev.carga()));
+//	}
+//
+//	@EventListener
+//	private void eventStringHandler(String ev) {
+//		IO.println("Tramiento Evento cadena: %s".formatted(ev));
+//	}
+
+	@Bean
+	CommandLineRunner introducciones(@EMail Sender sender) {
+		return arg -> {
+			if(sender instanceof Visible v) {
+				IO.println(v.isVisible() ? "es visible" : "NO es visible");
+				v.mostrar();
+				IO.println(v.isVisible() ? "es visible" : "NO es visible");
+				v.ocultar();
+				IO.println(v.isVisible() ? "es visible" : "NO es visible");
+			} else {
+				IO.println("NO implementa el interfaz Visible");
+			}
+		};
 	}
 
-	@EventListener
-	private void eventStringHandler(String ev) {
-		IO.println("Tramiento Evento cadena: %s".formatted(ev));
-	}
+
 }

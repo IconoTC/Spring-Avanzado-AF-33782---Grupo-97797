@@ -14,10 +14,10 @@ import com.example.ioc.notificaciones.TwitterSender;
 
 @Configuration
 public class AppConfig {
-	@Bean
-	GenericoEvent genericoEvent() {
-		return new GenericoEvent("Creado", "como bean");
-	}
+//	@Bean
+//	GenericoEvent genericoEvent() {
+//		return new GenericoEvent("Creado", "como bean");
+//	}
 	@Bean
 	@Lazy
 	ConstructorConValores miClase(NotificationService notify) {
