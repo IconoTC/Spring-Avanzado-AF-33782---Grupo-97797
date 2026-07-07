@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean name="ctx" class="org.springframework.context.support.ClassPathXmlApplicationContext" />
+	
+	<bean id="notify" class="com.example.ioc.NotificationServiceImpl" >
+		<property name="publisher" ref="ctx" />
+	</bean>
+
+	<bean id="config" class="com.example.ioc.implementaciones.ConfiguracionImpl">
+		<constructor-arg name="notify" ref="notify" />
+	</bean>
+	
+	<bean id="repositorioCadenas" class="com.example.ioc.implementaciones.RepositorioCadenasImpl">
+		<constructor-arg name="configuracion" ref="config" />
+		<constructor-arg name="notify" ref="notify" />
+		<property name="publisher" ref="ctx" />
+	</bean>
+	
+	<bean id="servicioCadenas" class="com.example.ioc.implementaciones.ServicioCadenasImpl">
+		<constructor-arg name="dao" ref="repositorioCadenas" />
+		<constructor-arg name="notify" ref="notify" />
+	</bean>
+
+	<bean name="sender" class="com.example.ioc.notificaciones.EMailSender" />
+	<bean name="sender1" class="com.example.ioc.notificaciones.FileSender" />
+	
+</beans>
