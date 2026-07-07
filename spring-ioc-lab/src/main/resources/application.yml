@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: spring-ioc-lab
+  profiles:
+    active: dev
+logging:
+  level:
+    root: warn
