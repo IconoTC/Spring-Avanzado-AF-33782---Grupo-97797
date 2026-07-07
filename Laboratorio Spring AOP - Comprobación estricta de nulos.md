@@ -50,6 +50,7 @@ Agregar la dependencia (en Spring Boot 4.x)::
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-aspectj-test</artifactId>
+		<scope>test</scope>
 	</dependency>
 
 ### Crear paquetes
