@@ -1,6 +1,7 @@
 package com.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.contracts.domain.repositories.ActorsRepository;
 import com.example.domain.entities.Actor;
+import com.example.domain.entities.models.ActorDTO;
+import com.example.domain.entities.models.ActorShort;
 
 @SpringBootApplication
 public class DemoDataApplication {
@@ -22,7 +25,7 @@ public class DemoDataApplication {
 		SpringApplication.run(DemoDataApplication.class, args);
 	}
 
-	@Bean
+//	@Bean
 	CommandLineRunner consultas(ActorsRepository dao) {
 		return arg -> {
 			// dao.findAll().forEach(IO::println);
@@ -40,6 +43,20 @@ public class DemoDataApplication {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		};
+	}
+	record ActorDetail(int actorId, String firstName, String lastName) {}
+	
+	@Bean
+	CommandLineRunner proyecciones(ActorsRepository dao) {
+		return arg -> {
+//			dao.findByActorIdGreaterThanEqual(200).forEach(IO::println);
+//			dao.findByActorIdGreaterThanEqual(200).forEach(item -> IO.println(ActorDTO.from(item)));
+//			dao.readByActorIdGreaterThanEqual(200).forEach(IO::println);
+//			dao.queryByActorIdGreaterThanEqual(200).forEach(item -> IO.println("%d %s".formatted(item.getId(), item.getNombre())));
+			dao.getByActorIdGreaterThanEqual(200, ActorDTO.class).forEach(IO::println);
+			dao.getByActorIdGreaterThanEqual(200, ActorShort.class).forEach(item -> IO.println("%d %s".formatted(item.getId(), item.getNombre())));
+			dao.getByActorIdGreaterThanEqual(200, ActorDetail.class).forEach(IO::println);
 		};
 	}
 
