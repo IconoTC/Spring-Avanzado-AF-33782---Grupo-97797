@@ -14,8 +14,10 @@ import com.example.domain.entities.Actor;
 
 @SpringBootApplication
 public class DemoDataApplication {
-	@Autowired @Lazy DemoDataApplication self;
-	
+	@Autowired
+	@Lazy
+	DemoDataApplication self;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoDataApplication.class, args);
 	}
@@ -23,18 +25,24 @@ public class DemoDataApplication {
 	@Bean
 	CommandLineRunner consultas(ActorsRepository dao) {
 		return arg -> {
-			//dao.findAll().forEach(IO::println);
-			//dao.findTop5ByFirstNameStartingWithOrderByLastNameDesc("P").forEach(IO::println);
-			//dao.findTop5ByFirstNameStartingWith("P", Sort.by("FirstName").descending()).forEach(IO::println);
+			// dao.findAll().forEach(IO::println);
+			// dao.findTop5ByFirstNameStartingWithOrderByLastNameDesc("P").forEach(IO::println);
+			// dao.findTop5ByFirstNameStartingWith("P",
+			// Sort.by("FirstName").descending()).forEach(IO::println);
 //			dao.findByActorIdGreaterThanEqual(197).forEach(IO::println);
 //			dao.findNovedadesJPQL(197).forEach(IO::println);
 //			dao.findNovedadesSQL(197).forEach(IO::println);
 //			dao.findAll((root, query, builder) -> builder.greaterThanOrEqualTo(root.get("actorId"), 197)).forEach(IO::println);
 //			dao.findAll((root, query, builder) -> builder.greaterThan(root.get("actorId"), 199)).forEach(IO::println);
-			self.relaciones(dao);
+//			self.relaciones(dao);
+			try {
+				self.modifica(dao);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		};
 	}
-	
+
 //	@Transactional
 	void relaciones(ActorsRepository dao) {
 		dao.findByActorIdGreaterThanEqual(199).forEach(item -> {
@@ -45,13 +53,26 @@ public class DemoDataApplication {
 		});
 	}
 
+	@Transactional(rollbackFor = Exception.class)
+	void modifica(ActorsRepository dao) {
+		var actor = new Actor(null, "4g");
+		if(actor.isInvalid()) {
+			System.err.println(actor.getErrorsMessage());
+		} else {
+			dao.save(actor);
+		}
+//		dao.save(new Actor("Pepito", "Grillo"));
+//		dao.save(new Actor("Carmelo", "Coton"));
+//		dao.deleteById(1);
+	}
+
 //	@Bean
 	CommandLineRunner crud(ActorsRepository dao) {
 		return arg -> {
 			var actor = dao.save(new Actor("Pepito", "Grillo"));
 			var id = actor.getActorId();
 			var leido = dao.findById(id);
-			if(leido.isEmpty()) {
+			if (leido.isEmpty()) {
 				System.err.println("Actor no encontrado");
 				return;
 			}
@@ -60,7 +81,7 @@ public class DemoDataApplication {
 			dao.save(actor);
 			dao.findAll().forEach(System.out::println);
 			dao.deleteById(id);
-			if(!dao.existsById(id))
+			if (!dao.existsById(id))
 				System.err.println("Actor %d no encontrado".formatted(id));
 			dao.deleteById(id);
 		};

@@ -5,8 +5,6 @@ public final class CadenasValidator {
 	}
 
 	public static boolean isNIF(String value) {
-		if (value == null)
-			return false;
 		value = value.toUpperCase();
 		if (!value.matches("^\\d{1,8}[A-Z]$") || Integer.parseInt(value.substring(0, value.length() - 1)) == 0)
 			return false;
