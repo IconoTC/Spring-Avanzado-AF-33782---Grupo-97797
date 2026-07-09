@@ -11,9 +11,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.contracts.domain.repositories.ActorsRepository;
+import com.example.contracts.domain.repositories.CategoriesRepository;
 import com.example.domain.entities.Actor;
 import com.example.domain.entities.models.ActorDTO;
 import com.example.domain.entities.models.ActorShort;
+
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.xml.XmlMapper;
 
 @SpringBootApplication
 public class DemoDataApplication {
@@ -25,7 +29,7 @@ public class DemoDataApplication {
 		SpringApplication.run(DemoDataApplication.class, args);
 	}
 
-//	@Bean
+	@Bean
 	CommandLineRunner consultas(ActorsRepository dao) {
 		return arg -> {
 			// dao.findAll().forEach(IO::println);
@@ -45,9 +49,11 @@ public class DemoDataApplication {
 			}
 		};
 	}
-	record ActorDetail(int actorId, String firstName, String lastName) {}
-	
-	@Bean
+
+	record ActorDetail(int actorId, String firstName, String lastName) {
+	}
+
+//	@Bean
 	CommandLineRunner proyecciones(ActorsRepository dao) {
 		return arg -> {
 //			dao.findByActorIdGreaterThanEqual(200).forEach(IO::println);
@@ -55,9 +61,29 @@ public class DemoDataApplication {
 //			dao.readByActorIdGreaterThanEqual(200).forEach(IO::println);
 //			dao.queryByActorIdGreaterThanEqual(200).forEach(item -> IO.println("%d %s".formatted(item.getId(), item.getNombre())));
 			dao.getByActorIdGreaterThanEqual(200, ActorDTO.class).forEach(IO::println);
-			dao.getByActorIdGreaterThanEqual(200, ActorShort.class).forEach(item -> IO.println("%d %s".formatted(item.getId(), item.getNombre())));
+			dao.getByActorIdGreaterThanEqual(200, ActorShort.class)
+					.forEach(item -> IO.println("%d %s".formatted(item.getId(), item.getNombre())));
 			dao.getByActorIdGreaterThanEqual(200, ActorDetail.class).forEach(IO::println);
 		};
+	}
+
+	@Bean
+	@Transactional
+	CommandLineRunner serializacion(CategoriesRepository dao, JsonMapper toJson, XmlMapper toXml) {
+		return arg -> {
+//			var item = dao.findById(1).get();
+//			IO.println(toJson.writeValueAsString(item));
+//			IO.println(toXml.writeValueAsString(item));
+//			IO.println(toJson.writeValueAsString(dao.findAll()));
+//			IO.println(toXml.writeValueAsString(dao.findAll()));
+			self.serializacionDependencia(dao, toJson, toXml);
+		};
+	}
+
+	@Transactional
+	void serializacionDependencia(CategoriesRepository dao, JsonMapper toJson, XmlMapper toXml) {
+		var item = dao.findById(1).get();
+		IO.println(toJson.writeValueAsString(item));
 	}
 
 //	@Transactional
@@ -73,7 +99,7 @@ public class DemoDataApplication {
 	@Transactional(rollbackFor = Exception.class)
 	void modifica(ActorsRepository dao) {
 		var actor = new Actor(null, "4g");
-		if(actor.isInvalid()) {
+		if (actor.isInvalid()) {
 			System.err.println(actor.getErrorsMessage());
 		} else {
 			dao.save(actor);
