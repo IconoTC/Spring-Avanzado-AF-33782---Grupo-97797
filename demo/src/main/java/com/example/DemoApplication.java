@@ -36,6 +36,8 @@ import com.example.ioc.implementaciones.RepositorioCadenasImpl;
 import com.example.ioc.implementaciones.ServicioCadenasImpl;
 import com.example.ioc.notificaciones.Sender;
 
+import jakarta.annotation.PreDestroy;
+
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication
@@ -256,5 +258,12 @@ public class DemoApplication implements CommandLineRunner {
 			mensajeria.sendMimeEmailAsync("admin@example.com", "Aplicacion Open", body, true);
 		};
 	}
-
+	
+	@Autowired
+	MessagingService mensajeria;
+	
+	@PreDestroy
+	void cierro() {
+		mensajeria.sendEmail("admin@example.com", "Demo application", "Aplicación detenidad");
+	}
 }
